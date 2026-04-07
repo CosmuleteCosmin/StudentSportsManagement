@@ -13,9 +13,9 @@ A comprehensive management platform built with **Java Spring Boot** and **MS SQL
 ## 📂 Project Documentation
 
 This repository includes architectural details and database resources:
-* **Database Schema:** Detailed relationships between Students, Teams, and Faculties.
-* **Custom Queries:** Optimized SQL for generating real-time statistics (Joins, Subqueries, Aggregations).
-* **Business Logic:** Implementation of "Players per Sport" and team distribution metrics.
+* **RAPORT PROIECT AWJ.pdf & Documentatie.pdf** Full project specifications and architectural details.
+* **Interogari.pdf** The complex SQL queries used for generating reports (Joins, Subqueries, Aggregations).
+* **EvidentaEchipelorSportiveDeStudenti.bak** Database backup file for quick restoration..
 
 ## ⚙️ Setup & Installation
 
@@ -24,4 +24,19 @@ This repository includes architectural details and database resources:
 git clone [https://github.com/CosmuleteCosmin/StudentSportsManagement.git](https://github.com/CosmuleteCosmin/StudentSportsManagement.git)
 ```
 ### 2. Database Setup:
-Restore the SpectacoleDeStandUp.bak file in MS SQL Server Management Studio (SSMS).
+ * Restore the EvidentaEchipelorSportiveDeStudenti.bak file in MS SQL Server Management Studio (SSMS).
+
+### 3. Configure Application:
+ * Open src/main/resources/application.properties.
+ * Update the spring.datasource.url, username, and password to match your local SQL Server instance.
+
+### 4.Run the App:
+ * Run the project as a Spring Boot App via your IDE (IntelliJ/Eclipse)
+```bash
+./gradlew bootRun
+```
+
+### 5.Access:
+ * Go to http://localhost:8080 in your browser.
+
+Developed by Cosmulete Ion-Cosmin
