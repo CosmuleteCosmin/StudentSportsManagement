@@ -14,9 +14,9 @@ A comprehensive management platform built with **Java Spring Boot** and **MS SQL
 ## 📂 Project Documentation
 
 This repository includes architectural details and database resources:
-* **RAPORT PROIECT AWJ.pdf & Documentatie.pdf** Full project specifications and architectural details.
-* **Interogari.pdf** The complex SQL queries used for generating reports (Joins, Subqueries, Aggregations).
-* **EvidentaEchipelorSportiveDeStudenti.bak** Database backup file for quick restoration..
+* **RAPORT PROIECT AWJ.pdf & Documentatie.pdf** - Full project specifications and architectural details.
+* **Interogari.pdf** - The complex SQL queries used for generating reports (Joins, Subqueries, Aggregations).
+* **EvidentaEchipelorSportiveDeStudenti.bak** - Database backup file for quick restoration..
 
 ## ⚙️ Setup & Installation
 
