@@ -7,6 +7,7 @@ A comprehensive management platform built with **Java Spring Boot** and **MS SQL
 * **Backend:** Java, Spring Boot (MVC Architecture)
 * **Database:** Microsoft SQL Server (MSSQL)
 * **Data Access:** Spring Data JPA & Native SQL (Custom queries for complex reporting)
+* **Frontend**: Thymeleaf, HTML, CSS,
 * **Build Tools:** Gradle, Git
 * **IDE:** IntelliJ IDEA
 
