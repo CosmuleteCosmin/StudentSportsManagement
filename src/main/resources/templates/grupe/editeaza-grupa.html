@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editează Grupa</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header><h1>Modificare Grupă</h1></header>
+<main>
+    <form th:action="@{/grupe/actualizeaza/{id}(id=${grupa.grupaID})}" th:object="${grupa}" method="post" class="add-form">
+
+        <label>Nume Grupă:</label>
+        <input type="text" th:field="*{nume}"
+               th:classappend="${#fields.hasErrors('nume')} ? 'input-eroare' : ''" />
+        <span th:if="${#fields.hasErrors('nume')}" th:errors="*{nume}" class="eroare-text"></span>
+
+        <label>Sport:</label>
+        <select th:field="*{sport.sportID}" required style="padding: 10px;">
+            <option th:each="s : ${listaSporturi}" th:value="${s.sportID}" th:text="${s.nume}"></option>
+        </select>
+
+        <button type="submit" class="btn-submit" style="background-color: orange;">Salvează</button>
+    </form>
+    <p><a th:href="@{/grupe}" class="buton-meniu">← Renunță</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panou de Control - Poly Olympics</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background: white; border: 1px solid #ddd; border-radius: 8px;
+            padding: 20px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); border-color: #005a9c; }
+        .card h3 { color: #005a9c; margin-bottom: 10px; }
+        .btn-card {
+            display: inline-block; padding: 10px 20px; background-color: #005a9c;
+            color: white; text-decoration: none; border-radius: 5px; font-weight: bold;
+        }
+        .btn-card:hover { background-color: #003d6b; }
+    </style>
+</head>
+<body>
+<header><h1>Evidenta Echipelor Sportive De Studenti</h1></header>
+<main>
+    <h2>Bine ai venit!</h2>
+    <p>Selectează o secțiune:</p>
+
+    <div class="dashboard-grid">
+        <div class="card">
+            <h3>🏫 Facultăți</h3>
+            <a th:href="@{/facultati}" class="btn-card">Gestionează</a>
+        </div>
+        <div class="card">
+            <h3>🎓 Studenți</h3>
+            <a th:href="@{/studenti}" class="btn-card">Gestionează</a>
+        </div>
+        <div class="card">
+            <h3>⚽ Sporturi</h3>
+            <a th:href="@{/sporturi}" class="btn-card">Gestionează</a>
+        </div>
+        <div class="card">
+            <h3>👕 Echipe</h3>
+            <a th:href="@{/echipe}" class="btn-card">Gestionează</a>
+        </div>
+        <div class="card">
+            <h3>👥 Membri</h3>
+            <a th:href="@{/membrii}" class="btn-card">Gestionează</a>
+        </div>
+        <div class="card">
+            <h3>📊 Grupe</h3>
+            <a th:href="@{/grupe}" class="btn-card">Gestionează</a>
+        </div>
+        <div class="card">
+            <h3>🏆 Meciuri</h3>
+            <a th:href="@{/meciuri}" class="btn-card">Gestionează</a>
+        </div>
+        <div class="card">
+            <h3>📈 Rapoarte & Statistici</h3>
+            <a th:href="@{/statistici}" class="btn-card">Vezi Rapoarte</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

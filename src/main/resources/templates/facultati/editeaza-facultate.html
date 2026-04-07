@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editează Facultate</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header>
+    <h1>Modificare Facultate</h1>
+</header>
+<main>
+    <form th:action="@{/facultati/actualizeaza/{id}(id=${facultate.facultateID})}"
+          th:object="${facultate}" method="post" class="add-form">
+
+        <label for="denumire">Denumirea Nouă:</label>
+        <input type="text" id="denumire" th:field="*{denumire}"
+               th:classappend="${#fields.hasErrors('denumire')} ? 'input-eroare' : ''" />
+        <span th:if="${#fields.hasErrors('denumire')}" th:errors="*{denumire}" class="eroare-text"></span>
+
+        <button type="submit" class="btn-submit" style="background-color: orange;">Salvează Modificările</button>
+    </form>
+
+    <p><a th:href="@{/facultati}" class="buton-meniu">← Renunță</a></p>
+</main>
+</body>
+</html>

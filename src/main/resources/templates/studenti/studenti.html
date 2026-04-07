@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Studenți</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header>
+    <h1>Studenți Înregistrați</h1>
+</header>
+
+<main style="max-width: 1000px;">
+    <div class="lista-container">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; margin-top: 20px">
+            <a th:href="@{/studenti/adauga}" class="buton-adauga">
+                + Adaugă Student Nou
+            </a>
+
+            <form th:action="@{/studenti}" method="get" style="display: flex; gap: 8px; align-items: center;">
+                <select name="facultateId" onchange="this.form.submit()"
+                        style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; max-width: 200px;">
+                    <option value="">-- Toate Facultățile --</option>
+                    <option th:each="f : ${listaFacultati}"
+                            th:value="${f.facultateID}"
+                            th:text="${f.denumire}"
+                            th:selected="${f.facultateID == facultateId}">
+                    </option>
+                </select>
+                <input type="text" name="keyword" th:value="${keyword}" class="input-cautare" placeholder="Caută după nume, matricol...">
+                <button type="submit" class="btn-cautare-base btn-albastru">Caută</button>
+                <a th:href="@{/studenti}" class="btn-cautare-base btn-gri">Resetează</a>
+            </form>
+        </div>
+
+        <table class="tabel-fix">
+            <colgroup>
+                <col style="width: 12%;"> <col style="width: 12%;"> <col style="width: 20%;"> <col style="width: 25%;"> <col style="width: 13%;"> <col style="width: 18%;"> </colgroup>
+            <thead>
+            <tr>
+                <th>Nume</th>
+                <th>Prenume</th>
+                <th>Facultate</th>
+                <th>Email</th>
+                <th>Nr. Matricol</th>
+                <th>Acțiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="std : ${studenti}">
+                <td th:text="${std.nume}"></td>
+                <td th:text="${std.prenume}"></td>
+                <td th:text="${std.facultate != null} ? ${std.facultate.denumire} : '-'"></td>
+                <td th:text="${std.email}"></td>
+                <td th:text="${std.numarMatricol}"></td>
+
+                <td style="white-space: normal;">
+                    <a th:href="@{/studenti/editeaza/{id}(id=${std.studentID})}"
+                       class="btn-actiune" style="background-color: orange; margin-right: 5px;">
+                        Editează
+                    </a>
+                    <a th:href="@{/studenti/sterge/{id}(id=${std.studentID})}"
+                       onclick="return confirm('Ești sigur că vrei să ștergi acest student?');"
+                       class="btn-actiune" style="background-color: red;">
+                        Șterge
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${studenti.isEmpty()}" style="padding: 20px; color: #777; text-align: center;">
+            Nu există niciun student înregistrat în baza de date.
+        </div>
+    </div>
+    <a th:href="@{/}" class="buton-meniu">Înapoi la Meniu</a>
+</main>
+</body>
+</html>

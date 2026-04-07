@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Programează Meci</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header><h1>Programare Meci Nou</h1></header>
+<main>
+    <form th:action="@{/meciuri/salveaza}" th:object="${meci}" method="post" class="add-form">
+
+        <label>Data:</label>
+        <input type="date" th:field="*{data}" th:classappend="${#fields.hasErrors('data')} ? 'input-eroare' : ''" />
+        <span th:if="${#fields.hasErrors('data')}" class="eroare-text">
+            Data este obligatorie!
+        </span>
+
+        <label>Locație:</label>
+        <input type="text" th:field="*{locatie}" th:classappend="${#fields.hasErrors('locatie')} ? 'input-eroare' : ''" />
+        <span th:if="${#fields.hasErrors('locatie')}" class="eroare-text">Locația este obligatorie!</span>
+
+        <label>Grupa:</label>
+        <select id="grupaSelector" th:field="*{grupa}"
+                th:classappend="${#fields.hasErrors('grupa')} ? 'input-eroare' : ''"
+                onchange="filtreazaEchipeDupaSport()">
+            <option value="" data-sport-id="0">-- Alege Grupa --</option>
+            <option th:each="g : ${listaGrupe}"
+                    th:value="${g.grupaID}"
+                    th:text="${g.nume} + ' (' + ${g.sport.nume} + ')'"
+                    th:data-sport-id="${g.sport.sportID}">
+            </option>
+        </select>
+        <span th:if="${#fields.hasErrors('grupa')}" class="eroare-text">Alege o grupă!</span>
+
+        <div class="form-group" style="margin-top: 15px;">
+            <label>Echipa 1 (Gazdă):</label>
+            <select id="echipa1" th:field="*{echipa1}" class="form-control"
+                    onchange="filtreazaRivali()"
+                    required style="width: 100%; padding: 8px;">
+                <option value="" data-sport-id="0" data-facultate-id="0">-- Alege Echipa 1 --</option>
+                <option th:each="e : ${listaEchipe}"
+                        th:value="${e.echipaID}"
+                        th:text="${e.facultate.denumire} + ' (' + ${e.sport.nume} + ')'"
+                        th:data-sport-id="${e.sport.sportID}"
+                        th:data-facultate-id="${e.facultate.facultateID}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('echipa1')}" class="eroare-text">Alege echipa gazdă!</span>
+        </div>
+
+        <div class="form-group">
+            <label>Echipa 2 (Oaspete):</label>
+            <select id="echipa2" th:field="*{echipa2}" class="form-control"
+                    required style="width: 100%; padding: 8px;">
+                <option value="" data-sport-id="0" data-facultate-id="0">-- Alege Echipa 2 --</option>
+                <option th:each="e : ${listaEchipe}"
+                        th:value="${e.echipaID}"
+                        th:text="${e.facultate.denumire} + ' (' + ${e.sport.nume} + ')'"
+                        th:data-sport-id="${e.sport.sportID}"
+                        th:data-facultate-id="${e.facultate.facultateID}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('echipa2')}" class="eroare-text">Alege echipa oaspete!</span>
+        </div>
+
+        <div class="form-group" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
+            <label style="font-weight: bold; color: #555;">Rezultat (Opțional):</label>
+
+            <div style="display: flex; gap: 20px; align-items: flex-start; margin-top: 10px;">
+                <div style="flex: 1;">
+                    <label>Scor Gazdă:</label>
+                    <input type="number" th:field="*{scorEchipa1}" class="form-control" min="0" placeholder="0">
+                </div>
+
+                <div style="padding-top: 30px; font-weight: bold;">-</div>
+
+                <div style="flex: 1;">
+                    <label>Scor Oaspete:</label>
+                    <input type="number" th:field="*{scorEchipa2}" class="form-control" min="0" placeholder="0">
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            function filtreazaEchipeDupaSport() {
+                var grupaSelect = document.getElementById("grupaSelector");
+                var sportIdGrupa = grupaSelect.options[grupaSelect.selectedIndex].getAttribute("data-sport-id");
+
+                filtreazaSelect("echipa1", sportIdGrupa);
+                filtreazaSelect("echipa2", sportIdGrupa);
+
+                document.getElementById("echipa1").value = "";
+                document.getElementById("echipa2").value = "";
+            }
+
+            function filtreazaSelect(elementId, sportIdPermis) {
+                var select = document.getElementById(elementId);
+                var options = select.options;
+
+                for (var i = 0; i < options.length; i++) {
+                    var sportEchipa = options[i].getAttribute("data-sport-id");
+
+                    if (sportEchipa == sportIdPermis || sportEchipa == "0" || !sportIdPermis) {
+                        options[i].style.display = "block";
+                    } else {
+                        options[i].style.display = "none";
+                    }
+                }
+            }
+
+            function filtreazaRivali() {
+                var echipa1Select = document.getElementById("echipa1");
+                var facultateId1 = echipa1Select.options[echipa1Select.selectedIndex].getAttribute("data-facultate-id");
+                var echipa1Id = echipa1Select.value;
+
+                var echipa2Select = document.getElementById("echipa2");
+                var options = echipa2Select.options;
+
+                for (var i = 0; i < options.length; i++) {
+                    var facultateId2 = options[i].getAttribute("data-facultate-id");
+                    var echipa2Id = options[i].value;
+
+                    if (options[i].style.display === "none") continue;
+
+                    if (facultateId1 && facultateId1 === facultateId2) {
+                        options[i].style.display = "none";
+                    } else {
+                        options[i].style.display = "block";
+                    }
+
+                    if (echipa2Id === "") options[i].style.display = "block";
+                }
+
+                if (echipa2Select.selectedIndex > 0 && echipa2Select.options[echipa2Select.selectedIndex].style.display === "none") {
+                    echipa2Select.value = "";
+                }
+            }
+        </script>
+
+        <button type="submit" class="btn-submit" style="margin-top: 20px;">Programează Meci</button>
+    </form>
+    <a th:href="@{/meciuri}" class="buton-meniu">← Înapoi</a>
+</main>
+</body>
+</html>

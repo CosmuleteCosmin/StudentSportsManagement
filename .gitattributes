@@ -1,0 +1,17 @@
+/gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
+
+.gradle/
+build/
+
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+*.class
+
+*.log
+.DS_Store

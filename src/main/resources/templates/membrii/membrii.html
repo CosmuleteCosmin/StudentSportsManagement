@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Componența Echipelor</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header>
+    <h1>Membrii Echipelor</h1>
+</header>
+<main>
+    <div class="lista-container">
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; margin-top: 10px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+
+            <a th:href="@{/membrii/adauga}" class="buton-adauga"
+               style="padding: 0 20px; font-size: 14px; white-space: nowrap; height: 38px; line-height: 38px; align-self: center;">
+                + Înscrie Membru Nou
+            </a>
+
+            <form th:action="@{/membrii}" method="get" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" name="keyword" th:value="${keyword}" class="input-cautare"
+                           placeholder="Caută student..."
+                           style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; width: 250px; height: 38px;">
+
+                    <button type="submit" class="btn-cautare-base btn-albastru" style="height: 38px; line-height: 38px; padding: 0 15px; font-size: 14px;">Caută</button>
+                    <a th:href="@{/membrii}" class="btn-cautare-base btn-gri" style="height: 38px; line-height: 38px; padding: 0 15px; font-size: 14px;">Reset</a>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+
+                    <select name="facultateId" onchange="this.form.submit()"
+                            style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; width: 180px; height: 38px; background-color: #f9f9f9; font-size: 13px;">
+                        <option value="">-- Toate Facultățile --</option>
+                        <option th:each="f : ${listaFacultati}"
+                                th:value="${f.facultateID}"
+                                th:text="${f.denumire}"
+                                th:selected="${f.facultateID == facultateId}">
+                        </option>
+                    </select>
+
+                    <select name="sportId" onchange="this.form.submit()"
+                            style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; width: 150px; height: 38px; background-color: #f9f9f9; font-size: 13px;">
+                        <option value="">-- Toate Sporturile --</option>
+                        <option th:each="s : ${listaSporturi}"
+                                th:value="${s.sportID}"
+                                th:text="${s.nume}"
+                                th:selected="${s.sportID == sportId}">
+                        </option>
+                    </select>
+
+                    <select name="rol" onchange="this.form.submit()"
+                            style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; width: 130px; height: 38px; background-color: #f9f9f9; font-size: 13px;">
+                        <option value="">-- Toate Rolurile --</option>
+                        <option value="Membru" th:selected="${rolSelectat == 'Membru'}">Membru</option>
+                        <option value="Capitan" th:selected="${rolSelectat == 'Capitan'}">Căpitan</option>
+                        <option value="Titular" th:selected="${rolSelectat == 'Titular'}">Titular</option>
+                        <option value="Rezerva" th:selected="${rolSelectat == 'Rezerva'}">Rezervă</option>
+                        <option value="Portar" th:selected="${rolSelectat == 'Portar'}">Portar</option>
+                    </select>
+                </div>
+
+            </form>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+            <tr style="background-color: #eee; text-align: left;">
+                <th style="padding: 10px;">Student</th>
+                <th style="padding: 10px;">Echipa (Sport)</th>
+                <th style="padding: 10px;">Facultatea Echipei</th>
+                <th style="padding: 10px;">Rol</th>
+                <th style="padding: 10px;">Acțiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${membrii}" style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;" th:text="${m.student.nume} + ' ' + ${m.student.prenume}"></td>
+                <td style="padding: 10px;" th:text="${m.echipa.sport.nume}"></td>
+                <td style="padding: 10px;" th:text="${m.echipa.facultate.denumire}"></td>
+                <td style="padding: 10px; font-weight: bold; color: #005a9c;" th:text="${m.rol}"></td>
+
+                <td style="padding: 10px; white-space: nowrap;">
+                    <a th:href="@{/membrii/editeaza/{sid}/{eid}(sid=${m.student.studentID}, eid=${m.echipa.echipaID})}"
+                       style="background:orange; color:white; padding:5px 10px; text-decoration:none; border-radius:4px; margin-right:5px;">Editează</a>
+
+                    <a th:href="@{/membrii/sterge/{sid}/{eid}(sid=${m.student.studentID}, eid=${m.echipa.echipaID})}"
+                       onclick="return confirm('Sigur elimini acest student din echipă?');"
+                       style="background:red; color:white; padding:5px 10px; text-decoration:none; border-radius:4px;">Șterge</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${membrii.empty}" style="padding: 20px; color: #777;">Nu există înscrieri în echipe.</div>
+    </div>
+    <a th:href="@{/}" class="buton-meniu">Înapoi la Meniu</a>
+</main>
+</body>
+</html>

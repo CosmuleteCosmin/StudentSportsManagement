@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Statistici și Rapoarte</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+    <style>
+        .stats-section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .stats-header {
+            color: #005a9c;
+            border-bottom: 2px solid #005a9c;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .empty-msg {
+            color: #28a745;
+            font-style: italic;
+            font-weight: bold;
+        }
+        .text-rosu {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        /* --- STILURI NOI PENTRU CARDURI (DASHBOARD) --- */
+        .dashboard-cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .card-rezumat {
+            flex: 1;
+            min-width: 150px;
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .card-rezumat:hover {
+            transform: translateY(-5px); /* Efect vizual la trecerea mouse-ului */
+        }
+        .card-rezumat .numar {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .card-rezumat .eticheta {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Rapoarte și Statistici</h1>
+</header>
+<main>
+    <div class="lista-container" style="border: none; background: transparent;">
+
+        <div class="dashboard-cards">
+            <div class="card-rezumat" style="background: linear-gradient(135deg, #007bff, #0056b3);">
+                <div class="numar" th:text="${totalStudenti}">0</div>
+                <div class="eticheta">Studenți Înregistrați</div>
+            </div>
+
+            <div class="card-rezumat" style="background: linear-gradient(135deg, #28a745, #1e7e34);">
+                <div class="numar" th:text="${totalEchipe}">0</div>
+                <div class="eticheta">Echipe Create</div>
+            </div>
+
+            <div class="card-rezumat" style="background: linear-gradient(135deg, #6f42c1, #4e2d86);">
+                <div class="numar" th:text="${totalMeciuri}">0</div>
+                <div class="eticheta">Meciuri Totale</div>
+            </div>
+
+            <div class="card-rezumat" style="background: linear-gradient(135deg, #ffc107, #e0a800); color: #333;">
+                <div class="numar" th:text="${totalSporturi}">0</div>
+                <div class="eticheta">Sporturi</div>
+            </div>
+        </div>
+
+        <div class="stats-section" style="border-left: 5px solid #005a9c;">
+            <h3 class="stats-header">📅 Următoarele Meciuri Programate</h3>
+
+            <table th:if="${meciuriViitoare != null and !meciuriViitoare.isEmpty()}" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                <tr style="background: #eee; text-align: left;">
+                    <th style="padding: 10px;">Data</th>
+                    <th style="padding: 10px;">Meci</th>
+                    <th style="padding: 10px;">Locație</th>
+                    <th style="padding: 10px;">Grupă</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="m : ${meciuriViitoare}" style="border-bottom: 1px solid #ddd;">
+                    <td style="padding: 10px; font-weight: bold;" th:text="${m.data}"></td>
+                    <td style="padding: 10px;">
+                        <span th:text="${m.echipa1.facultate.denumire}" style="color: #005a9c; font-weight: bold;"></span>
+                        vs
+                        <span th:text="${m.echipa2.facultate.denumire}" style="color: #d9534f; font-weight: bold;"></span>
+                        <br>
+                        <small th:text="'(' + ${m.echipa1.sport.nume} + ')'" style="color: gray;"></small>
+                    </td>
+                    <td style="padding: 10px;" th:text="${m.locatie}"></td>
+                    <td style="padding: 10px;" th:text="${m.grupa != null} ? ${m.grupa.nume} : '-'"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${meciuriViitoare == null or meciuriViitoare.isEmpty()}" class="empty-msg" style="color: gray;">
+                Nu există meciuri viitoare programate momentan.
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h3 class="stats-header">⚠ Facultăți care NU au nicio echipă înscrisă</h3>
+            <ul>
+                <li th:each="f : ${facultatiFaraEchipe}"
+                    th:text="${f.denumire}"
+                    class="text-rosu"></li>
+            </ul>
+            <div th:if="${facultatiFaraEchipe != null and facultatiFaraEchipe.isEmpty()}" class="empty-msg">
+                Excelent! Toate facultățile au echipe înscrise.
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h3 class="stats-header">⚠ Sporturi fără participanți (nicio echipă creată)</h3>
+            <ul>
+                <li th:each="s : ${sporturiFaraEchipe}" th:text="${s.nume}"></li>
+            </ul>
+            <div th:if="${sporturiFaraEchipe != null and sporturiFaraEchipe.isEmpty()}" class="empty-msg">
+                Toate sporturile au echipe active!
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h3 class="stats-header">⚠ Studenți care nu fac parte din nicio echipă</h3>
+
+            <table th:if="${studentiFaraEchipa != null and !studentiFaraEchipa.isEmpty()}" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                <thead>
+                <tr style="background: #f8f9fa; text-align: left; border-bottom: 2px solid #ddd;">
+                    <th style="padding: 10px;">Nume</th>
+                    <th style="padding: 10px;">Prenume</th>
+                    <th style="padding: 10px;">Facultate</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="st : ${studentiFaraEchipa}" style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 10px;" th:text="${st.nume}"></td>
+                    <td style="padding: 10px;" th:text="${st.prenume}"></td>
+                    <td style="padding: 10px;" th:text="${st.facultate != null} ? ${st.facultate.denumire} : '-'"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${studentiFaraEchipa == null or studentiFaraEchipa.isEmpty()}" class="empty-msg">
+                Toți studenții sunt arondați la echipe.
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h3 class="stats-header">✔ Echipe Active (Au meciuri programate)</h3>
+            <ul th:if="${echipeActive != null and !echipeActive.isEmpty()}">
+                <li th:each="e : ${echipeActive}" style="margin-bottom: 5px;">
+                    <span th:text="${e.facultate != null ? e.facultate.denumire : 'Fara Fac.'}"></span> -
+                    <span th:text="${e.sport != null ? e.sport.nume : 'Fara Sport'}" style="font-weight: bold; color: #005a9c;"></span>
+                </li>
+            </ul>
+            <div th:if="${echipeActive == null or echipeActive.isEmpty()}" style="color: gray;">
+                Nicio echipă nu are meciuri programate momentan.
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h3 class="stats-header">Filtru Complex: Facultăți cu mulți studenți</h3>
+            <form th:action="@{/statistici}" method="get">
+                <label>Minim studenți:</label>
+                <input type="number" name="minStudenti" th:value="${valoareFiltru}" style="width: 60px;">
+                <button type="submit">Aplică Parametru</button>
+            </form>
+            <ul>
+                <li th:each="f : ${facultatiFiltrate}" th:text="${f.denumire}"></li>
+            </ul>
+        </div>
+
+        <div class="stats-section" style="border-left: 5px solid orange;">
+            <h3 class="stats-header">🏆 Clasament Facultăți (După numărul de victorii)</h3>
+
+            <table class="table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                <tr style="background: #eee; text-align: left;">
+                    <th style="padding: 10px; width: 50px;">Loc</th>
+                    <th style="padding: 10px;">Facultate</th>
+                    <th style="padding: 10px; text-align: center;">Victorii</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rand, iterStat : ${clasament}" style="border-bottom: 1px solid #ddd;">
+
+                    <td style="padding: 10px; font-weight: bold;" th:text="${iterStat.count}"></td>
+
+                    <td style="padding: 10px;" th:text="${rand[0]}"></td>
+
+                    <td style="padding: 10px; text-align: center;">
+                <span th:text="${rand[1]}"
+                      style="font-weight: bold; font-size: 1.2em; color: #28a745;"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${clasament == null or clasament.isEmpty()}" class="empty-msg">
+                Nu există încă meciuri jucate pentru a genera clasamentul.
+            </div>
+        </div>
+
+        <div class="stats-section" style="border-left: 5px solid #6f42c1;">
+        <h3 class="stats-header">👥 Distribuție Jucători pe Sporturi</h3>
+
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+            <tr style="background: #eee; text-align: left;">
+                <th style="padding: 10px;">Sport</th>
+                <th style="padding: 10px; text-align: center;">Număr Jucători Înregistrați</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sport : ${jucatoriPerSport}" style="border-bottom: 1px solid #ddd;">
+
+                <td style="padding: 10px; font-weight: bold;" th:text="${sport[0]}"></td>
+
+                <td style="padding: 10px; text-align: center;">
+                    <span th:text="${sport[1]}" style="font-size: 1.1em; font-weight: bold; color: #333;"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${jucatoriPerSport == null or jucatoriPerSport.isEmpty()}" class="empty-msg">
+            Nu există jucători înregistrați în nicio echipă.
+        </div>
+    </div>
+
+    </div>
+
+    <p><a th:href="@{/}" class="buton-meniu">← Înapoi la Meniul Principal</a></p>
+</main>
+</body>
+</html>

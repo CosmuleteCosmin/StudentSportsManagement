@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editează Echipa</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header><h1>Modificare Echipă</h1></header>
+<main>
+    <form th:action="@{/echipe/actualizeaza/{id}(id=${echipa.echipaID})}" th:object="${echipa}" method="post" class="add-form">
+
+        <label>Facultate:</label>
+        <select th:field="*{facultate.facultateID}" style="padding: 10px; margin-bottom: 10px;">
+            <option th:each="fac : ${listaFacultati}" th:value="${fac.facultateID}" th:text="${fac.denumire}"></option>
+        </select>
+
+        <label>Sport:</label>
+        <select th:field="*{sport.sportID}"
+                th:classappend="${#fields.hasErrors('sport')} ? 'input-eroare' : ''"
+                style="padding: 10px;">
+            <option th:each="s : ${listaSporturi}" th:value="${s.sportID}" th:text="${s.nume}"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('sport')}" th:errors="*{sport}" class="eroare-text"></span>
+
+        <button type="submit" class="btn-submit" style="background-color: orange;">Salvează Modificările</button>
+    </form>
+    <p><a th:href="@{/echipe}" class="buton-meniu">← Renunță</a></p>
+</main>
+</body>
+</html>

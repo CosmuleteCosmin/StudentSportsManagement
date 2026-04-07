@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Program Meciuri</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header>
+    <h1>Calendar Competițional</h1>
+</header>
+<main style="max-width: 1300px;">
+    <div class="lista-container">
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; margin-top: 10px; border-bottom: 1px solid #eee; padding-bottom: 20px;">
+
+            <a th:href="@{/meciuri/adauga}" class="buton-adauga"
+               style="padding: 0 20px; font-size: 14px; white-space: nowrap; height: 38px; line-height: 38px; align-self: center;">
+                + Programează Meci
+            </a>
+
+            <form th:action="@{/meciuri}" method="get" style="display: flex; flex-direction: column; gap: 10px; align-items: flex-end;">
+
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" name="keyword" th:value="${keyword}" class="input-cautare"
+                           placeholder="Caută meci..."
+                           style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; width: 250px; height: 38px;">
+
+                    <button type="submit" class="btn-cautare-base btn-albastru" style="height: 38px; line-height: 38px; padding: 0 15px; font-size: 14px;">Caută</button>
+                    <a th:href="@{/meciuri}" class="btn-cautare-base btn-gri" style="height: 38px; line-height: 38px; padding: 0 15px; font-size: 14px;">Reset</a>
+                </div>
+
+                <div style="display: flex; gap: 8px;">
+
+                    <input type="date" name="data" th:value="${dataFiltru}"
+                           style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; height: 38px; background-color: #f9f9f9; font-size: 13px;">
+
+                    <input type="text" name="locatie" th:value="${locatieFiltru}" placeholder="Locație..."
+                           style="padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; width: 100px; height: 38px; background-color: #f9f9f9; font-size: 13px;">
+
+                    <select name="echipa1Id" onchange="this.form.submit()"
+                            style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; width: 160px; height: 38px; background-color: #f9f9f9; font-size: 13px;">
+                        <option value="">-- Echipa 1 --</option>
+                        <option th:each="e : ${listaEchipe}"
+                                th:value="${e.echipaID}"
+                                th:text="${e.facultate.denumire} + ' (' + ${e.sport.nume} + ')'"
+                                th:selected="${e.echipaID == echipa1Id}">
+                        </option>
+                    </select>
+
+                    <select name="echipa2Id" onchange="this.form.submit()"
+                            style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; width: 160px; height: 38px; background-color: #f9f9f9; font-size: 13px;">
+                        <option value="">-- Echipa 2 --</option>
+                        <option th:each="e : ${listaEchipe}"
+                                th:value="${e.echipaID}"
+                                th:text="${e.facultate.denumire} + ' (' + ${e.sport.nume} + ')'"
+                                th:selected="${e.echipaID == echipa2Id}">
+                        </option>
+                    </select>
+                </div>
+
+            </form>
+        </div>
+
+        <table class="table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+            <tr style="background-color: #f2f2f2; text-align: left;">
+                <th style="padding: 12px; border-bottom: 2px solid #ddd;">Data</th>
+                <th style="padding: 12px; border-bottom: 2px solid #ddd;">Grupa</th>
+                <th style="padding: 12px; border-bottom: 2px solid #ddd;">Echipa 1 (Gazdă)</th>
+                <th style="padding: 12px; border-bottom: 2px solid #ddd; text-align: center;">Scor</th>
+                <th style="padding: 12px; border-bottom: 2px solid #ddd;">Echipa 2 (Oaspete)</th>
+                <th style="padding: 12px; border-bottom: 2px solid #ddd;">Câștigător</th>
+                <th style="padding: 12px; border-bottom: 2px solid #ddd;">Locație</th>
+                <th style="padding: 12px; border-bottom: 2px solid #ddd;">Acțiuni</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${meciuri}" style="border-bottom: 1px solid #ddd;">
+
+                <td style="padding: 12px;" th:text="${m.data}"></td>
+
+                <td style="padding: 12px;">
+                    <span th:if="${m.grupa != null}" th:text="${m.grupa.nume}"></span>
+                    <span th:unless="${m.grupa != null}">-</span>
+                </td>
+
+                <td style="padding: 12px; color: #0056b3; font-weight: bold;"
+                    th:text="${m.echipa1.facultate.denumire}"></td>
+
+                <td style="padding: 12px; text-align: center; font-weight: bold; font-size: 1.1em;">
+                    <span th:if="${m.scorEchipa1 != null}" th:text="${m.scorEchipa1} + ' - ' + ${m.scorEchipa2}"></span>
+                    <span th:if="${m.scorEchipa1 == null}" style="color: #999; font-size: 0.9em;">(Nejucat)</span>
+                </td>
+
+                <td style="padding: 12px; color: #d9534f; font-weight: bold;"
+                    th:text="${m.echipa2.facultate.denumire}"></td>
+
+                <td style="padding: 12px;">
+                <span th:if="${m.castigator != null}"
+                      th:text="${m.castigator.facultate.denumire}"
+                      style="color: green; font-weight: bold;"></span>
+                    <span th:if="${m.castigator == null}">-</span>
+                </td>
+
+                <td style="padding: 12px;" th:text="${m.locatie}"></td>
+
+                <td style="padding: 12px; white-space: nowrap;">
+                    <a th:href="@{/meciuri/editeaza/{id}(id=${m.meciID})}"
+                       class="btn-actiune"
+                       style="background-color: #ffc107; color: black; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 13px; border: 1px solid #e0a800; margin-right: 5px; display: inline-block;">
+                        Editează
+                    </a>
+
+                    <a th:href="@{/meciuri/sterge/{id}(id=${m.meciID})}"
+                       class="btn-actiune"
+                       onclick="return confirm('Sigur vrei să ștergi acest meci?');"
+                       style="background-color: #dc3545; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 13px; border: 1px solid #c82333; display: inline-block;">
+                        Șterge
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:if="${meciuri.isEmpty()}" style="padding: 20px; color: #777;">
+            Nu există meciuri programate.
+        </div>
+    </div>
+    <a th:href="@{/}" class="buton-meniu">Înapoi la Meniu</a>
+</main>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editează Rol Membru</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header><h1>Modificare Rol Membru</h1></header>
+<main>
+    <form th:action="@{/membrii/actualizeaza/{sid}/{eid}(sid=${membru.student.studentID}, eid=${membru.echipa.echipaID})}"
+          th:object="${membru}" method="post" class="add-form">
+
+        <div style="margin-bottom: 20px; padding: 10px; background: #eee; border-radius: 5px;">
+            <strong>Student:</strong> <span th:text="${membru.student.nume} + ' ' + ${membru.student.prenume}"></span><br>
+            <strong>Echipa:</strong> <span th:text="${membru.echipa.facultate.denumire} + ' - ' + ${membru.echipa.sport.nume}"></span>
+            <br><small style="color: gray;">(Nota: Pentru a schimba echipa, șterge membrul și adaugă-l din nou.)</small>
+        </div>
+
+        <label>Rol:</label>
+        <select th:field="*{rol}" required style="padding: 10px; margin-bottom: 15px; width: 100%; border: 1px solid #ccc; border-radius: 4px;">
+            <option value="">-- Selectează Rolul --</option>
+            <option value="Membru">Membru</option>
+            <option value="Capitan">Căpitan</option>
+            <option value="Titular">Titular</option>
+            <option value="Rezerva">Rezervă</option>
+            <option value="Portar">Portar</option>
+        </select>
+
+        <button type="submit" class="btn-submit" style="background-color: orange;">Salvează Noul Rol</button>
+    </form>
+    <p><a th:href="@{/membrii}" class="buton-meniu">← Renunță</a></p>
+</main>
+</body>
+</html>

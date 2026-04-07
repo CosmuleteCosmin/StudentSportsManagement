@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Adaugă Grupă</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header><h1>Definire Grupă Competițională</h1></header>
+<main>
+    <form th:action="@{/grupe/salveaza}" th:object="${grupa}" method="post" class="add-form">
+        <label>Nume Grupa:</label>
+        <input type="text" th:field="*{nume}" th:classappend="${#fields.hasErrors('nume')} ? 'input-eroare' : ''" />
+        <span th:if="${#fields.hasErrors('nume')}" th:errors="*{nume}" class="eroare-text"></span>
+
+        <label>Sport:</label>
+        <select th:field="*{sport.sportID}" th:classappend="${#fields.hasErrors('sport')} ? 'input-eroare' : ''">
+            <option value="">-- Alege --</option>
+            <option th:each="s : ${listaSporturi}" th:value="${s.sportID}" th:text="${s.nume}"></option>
+        </select>
+        <span th:if="${#fields.hasErrors('sport')}" th:errors="*{sport}" class="eroare-text"></span>
+
+        <button type="submit" class="btn-submit">Salvează</button>
+    </form>
+    <a th:href="@{/grupe}" class="buton-meniu">← Înapoi</a>
+</main>
+</body>
+</html>

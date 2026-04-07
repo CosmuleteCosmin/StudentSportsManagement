@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Înscrie Student în Echipă</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+    <style>
+        .eroare-text { color: #dc3545; font-size: 0.9em; margin-top: 5px; display: block; font-weight: bold; }
+        .input-eroare { border-color: #dc3545 !important; background-color: #fff8f8; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Înscriere Membru în Echipă</h1>
+</header>
+<main>
+    <form th:action="@{/membrii/salveaza}" th:object="${membru}" method="post" class="add-form">
+
+        <label>Alege Studentul:</label>
+        <select id="selectStudent" th:field="*{student.studentID}"
+                onchange="filtreazaEchipeDupaFacultate()"
+                th:classappend="${#fields.hasErrors('student')} ? 'input-eroare' : ''"
+                required style="padding: 10px; margin-bottom: 5px; width: 100%; border: 1px solid #ccc; border-radius: 4px;">
+            <option value="" data-facultate-id="">-- Selectează Student --</option>
+            <option th:each="std : ${listaStudenti}"
+                    th:value="${std.studentID}"
+                    th:data-facultate-id="${std.facultate.facultateID}"
+                    th:text="${std.nume} + ' ' + ${std.prenume} + ' (' + ${std.facultate.denumire} + ')'">
+            </option>
+        </select>
+        <span th:if="${#fields.hasErrors('student')}" th:errors="*{student}" class="eroare-text"></span>
+
+        <label style="margin-top: 15px; display:block;">Alege Echipa:</label>
+        <select id="selectEchipa" th:field="*{echipa.echipaID}"
+                required style="padding: 10px; margin-bottom: 15px; width: 100%; border: 1px solid #ccc; border-radius: 4px;">
+            <option value="" data-facultate-id="">-- Selectează Echipa --</option>
+            <option th:each="ech : ${listaEchipe}"
+                    th:value="${ech.echipaID}"
+                    th:data-facultate-id="${ech.facultate.facultateID}"
+                    th:text="${ech.sport.nume} + ' - ' + ${ech.facultate.denumire}">
+            </option>
+        </select>
+        <span th:if="${#fields.hasErrors('echipa')}" th:errors="*{echipa}" class="eroare-text"></span>
+
+        <label>Rol în Echipă:</label>
+        <select th:field="*{rol}" required style="padding: 10px; margin-bottom: 15px; width: 100%; border: 1px solid #ccc; border-radius: 4px;">
+            <option value="">-- Selectează Rolul --</option>
+            <option value="Membru">Membru</option>
+            <option value="Capitan">Căpitan</option>
+            <option value="Titular">Titular</option>
+            <option value="Rezerva">Rezervă</option>
+            <option value="Portar">Portar</option>
+        </select>
+
+        <button type="submit" class="btn-submit">Înscrie Studentul</button>
+    </form>
+    <a th:href="@{/membrii}" class="buton-meniu">← Înapoi la lista de membri</a>
+</main>
+
+<script>
+    function filtreazaEchipeDupaFacultate() {
+        var studentSelect = document.getElementById("selectStudent");
+        var echipaSelect = document.getElementById("selectEchipa");
+
+        var optiuneSelectata = studentSelect.options[studentSelect.selectedIndex];
+        var facultateIdStudent = optiuneSelectata.getAttribute("data-facultate-id");
+
+        echipaSelect.value = "";
+
+        var optiuniEchipa = echipaSelect.options;
+
+        for (var i = 0; i < optiuniEchipa.length; i++) {
+            var facultateIdEchipa = optiuniEchipa[i].getAttribute("data-facultate-id");
+
+            if (facultateIdEchipa == facultateIdStudent || facultateIdEchipa == "" || !facultateIdStudent) {
+                optiuniEchipa[i].style.display = "block";
+            } else {
+                optiuniEchipa[i].style.display = "none";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

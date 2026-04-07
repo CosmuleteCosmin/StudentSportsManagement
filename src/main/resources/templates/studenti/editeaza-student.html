@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editează Student</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header><h1>Modificare Date Student</h1></header>
+<main>
+    <form th:action="@{/studenti/actualizeaza/{id}(id=${student.studentID})}" th:object="${student}" method="post" class="add-form">
+
+        <label>Nume:</label>
+        <input type="text" th:field="*{nume}" th:classappend="${#fields.hasErrors('nume')} ? 'input-eroare' : ''"/>
+        <span th:if="${#fields.hasErrors('nume')}" th:errors="*{nume}" class="eroare-text"></span>
+
+        <label>Prenume:</label>
+        <input type="text" th:field="*{prenume}" th:classappend="${#fields.hasErrors('prenume')} ? 'input-eroare' : ''"/>
+        <span th:if="${#fields.hasErrors('prenume')}" th:errors="*{prenume}" class="eroare-text"></span>
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" th:classappend="${#fields.hasErrors('email')} ? 'input-eroare' : ''"/>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="eroare-text"></span>
+
+        <label>Număr Matricol:</label>
+        <input type="text" th:field="*{numarMatricol}" th:classappend="${#fields.hasErrors('numarMatricol')} ? 'input-eroare' : ''"/>
+        <span th:if="${#fields.hasErrors('numarMatricol')}" th:errors="*{numarMatricol}" class="eroare-text"></span>
+
+        <label>Facultate:</label>
+        <select th:field="*{facultate.facultateID}" required style="padding: 10px;">
+            <option th:each="fac : ${listaFacultati}" th:value="${fac.facultateID}" th:text="${fac.denumire}"></option>
+        </select>
+
+        <button type="submit" class="btn-submit" style="background-color: orange;">Salvează Modificările</button>
+    </form>
+    <p><a th:href="@{/studenti}" class="buton-meniu">← Renunță</a></p>
+</main>
+</body>
+</html>

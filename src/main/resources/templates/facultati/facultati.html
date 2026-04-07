@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Facultăți</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header><h1>Facultăți Înscrise</h1></header>
+<main>
+    <div class="lista-container">
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; margin-top: 20px">
+            <a th:href="@{/facultati/adauga}" class="buton-adauga">+ Adaugă Facultate</a>
+
+            <form th:action="@{/facultati}" method="get" style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" name="keyword" th:value="${keyword}" class="input-cautare" placeholder="Caută">
+                <button type="submit" class="btn-cautare-base btn-albastru">Caută</button>
+                <a th:href="@{/facultati}" class="btn-cautare-base btn-gri">Resetează</a>
+            </form>
+        </div>
+
+        <div th:if="${mesajEroare}"
+             style="background-color: #f8d7da; color: #721c24; padding: 15px; border: 1px solid #f5c6cb; border-radius: 4px; margin-bottom: 20px; font-weight: bold;">
+            <span th:text="${mesajEroare}"></span>
+        </div>
+
+        <div th:if="${mesajSucces}"
+             style="background-color: #d4edda; color: #155724; padding: 15px; border: 1px solid #c3e6cb; border-radius: 4px; margin-bottom: 20px;">
+            <span th:text="${mesajSucces}"></span>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+            <tr style="background-color: #eee; text-align: left;">
+                <th style="padding: 10px;">Denumire</th>
+                <th style="padding: 10px;">Acțiuni</th> </tr>
+            </thead>
+            <tbody>
+            <tr th:each="fac : ${facultati}" style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;" th:text="${fac.denumire}"></td>
+                <td style="padding: 10px;">
+
+                    <a th:href="@{/facultati/editeaza/{id}(id=${fac.facultateID})}"
+                       style="text-decoration: none; color: white; background-color: orange; padding: 5px 10px; border-radius: 4px;">
+                        Editează
+                    </a>
+
+                    <a th:href="@{/facultati/sterge/{id}(id=${fac.facultateID})}"
+                       onclick="return confirm('Ești sigur că vrei să ștergi această facultate? Această acțiune este ireversibilă!');"
+                       style="text-decoration: none; color: white; background-color: red; padding: 5px 10px; border-radius: 4px; margin-left: 5px;">
+                        Șterge
+                    </a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <a th:href="@{/}" class="buton-meniu">Înapoi la Meniu</a>
+
+</main>
+</body>
+</html>

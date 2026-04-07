@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Editează Meci</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header><h1>Modificare Meci</h1></header>
+<main>
+    <form th:action="@{/meciuri/actualizeaza/{id}(id=${meci.meciID})}" th:object="${meci}" method="post" class="add-form">
+
+        <div class="form-group">
+            <label>Grupa:</label>
+            <select th:field="*{grupa}" class="form-control" id="selectGrupa">
+                <option th:each="g : ${listaGrupe}"
+                        th:value="${g.grupaID}"
+                        th:text="${g.nume}"
+                        th:data-sport-id="${g.sport.sportID}">
+                </option>
+            </select>
+        </div>
+
+        <label>Data:</label>
+        <input type="date" th:field="*{data}" th:classappend="${#fields.hasErrors('data')} ? 'input-eroare' : ''" />
+        <span th:if="${#fields.hasErrors('data')}" th:errors="*{data}" class="eroare-text"></span>
+
+        <label>Locație:</label>
+        <input type="text" th:field="*{locatie}" required />
+
+        <div class="form-group">
+            <label>Echipa 1 (Gazdă):</label>
+            <select th:field="*{echipa1}" class="form-control" id="selectEchipa1">
+                <option value="">-- Selectează Echipa --</option>
+                <option th:each="e : ${listaEchipe}"
+                        th:value="${e.echipaID}"
+                        th:text="${e.facultate.denumire + ' (' + e.sport.nume + ')'}"
+                        th:data-sport-id="${e.sport.sportID}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('echipa1')}" th:errors="*{echipa1}" class="eroare-text" style="color:red"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Echipa 2 (Oaspete):</label>
+            <select th:field="*{echipa2}" class="form-control" id="selectEchipa2">
+                <option value="">-- Selectează Echipa --</option>
+                <option th:each="e : ${listaEchipe}"
+                        th:value="${e.echipaID}"
+                        th:text="${e.facultate.denumire + ' (' + e.sport.nume + ')'}"
+                        th:data-sport-id="${e.sport.sportID}">
+                </option>
+            </select>
+            <span th:if="${#fields.hasErrors('echipa2')}" th:errors="*{echipa2}" class="eroare-text" style="color:red"></span>
+        </div>
+
+        <div class="form-group" style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin-top: 20px; border: 1px solid #ddd;">
+            <h3 style="margin-top: 0; font-size: 16px; color: #333;">Rezultat & Câștigător</h3>
+
+            <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 15px;">
+                <div style="flex: 1;">
+                    <label style="display: block; font-size: 13px;">Scor Gazdă</label>
+                    <input type="number" th:field="*{scorEchipa1}" class="form-control" min="0" style="text-align: center; font-weight: bold;">
+                    <span th:if="${#fields.hasErrors('scorEchipa1')}" th:errors="*{scorEchipa1}" style="color: red;">Eroare scor</span>
+                </div>
+
+                <span style="font-size: 20px; font-weight: bold; color: #777;">:</span>
+
+                <div style="flex: 1;">
+                    <label style="display: block; font-size: 13px;">Scor Oaspete</label>
+                    <input type="number" th:field="*{scorEchipa2}" class="form-control" min="0" style="text-align: center; font-weight: bold;">
+                    <span th:if="${#fields.hasErrors('scorEchipa2')}" th:errors="*{scorEchipa2}" style="color: red;">Eroare scor</span>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit" style="background-color: orange; margin-top: 20px;">Salvează Modificările</button>
+    </form>
+
+    <p><a th:href="@{/meciuri}" class="buton-meniu">← Renunță</a></p>
+</main>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const selectGrupa = document.getElementById('selectGrupa');
+        const selectEchipa1 = document.getElementById('selectEchipa1');
+        const selectEchipa2 = document.getElementById('selectEchipa2');
+
+        function filtreazaEchipe() {
+            const optiuneGrupaSelectata = selectGrupa.options[selectGrupa.selectedIndex];
+            const sportIdTinta = optiuneGrupaSelectata.getAttribute('data-sport-id');
+
+            aplicaFiltruPeSelect(selectEchipa1, sportIdTinta);
+            aplicaFiltruPeSelect(selectEchipa2, sportIdTinta);
+        }
+
+        function aplicaFiltruPeSelect(selectElement, sportId) {
+            for (let i = 0; i < selectElement.options.length; i++) {
+                let option = selectElement.options[i];
+                let teamSportId = option.getAttribute('data-sport-id');
+
+                if (!teamSportId) continue;
+
+                if (teamSportId === sportId) {
+                    option.hidden = false;
+                    option.style.display = "";
+                } else {
+                    option.hidden = true;
+                    option.style.display = "none";
+
+                    if (selectElement.value === option.value) {
+                        selectElement.value = "";
+                    }
+                }
+            }
+        }
+
+        filtreazaEchipe();
+
+        selectGrupa.addEventListener('change', function() {
+            filtreazaEchipe();
+        });
+    });
+</script>
+
+</body>
+</html>

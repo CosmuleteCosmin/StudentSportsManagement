@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Înregistrare Student</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/forms.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header>
+    <h1>Înregistrare Student Nou</h1>
+</header>
+<main>
+    <form th:action="@{/studenti/salveaza}" th:object="${student}" method="post" class="add-form">
+
+        <label>Nume:</label>
+        <input type="text" th:field="*{nume}"
+               th:classappend="${#fields.hasErrors('nume')} ? 'input-eroare' : ''"
+               placeholder="Popescu"/>
+        <span th:if="${#fields.hasErrors('nume')}" th:errors="*{nume}" class="eroare-text"></span>
+
+
+        <label>Prenume:</label>
+        <input type="text" th:field="*{prenume}"
+               th:classappend="${#fields.hasErrors('prenume')} ? 'input-eroare' : ''"
+               placeholder="Andrei"/>
+        <span th:if="${#fields.hasErrors('prenume')}" th:errors="*{prenume}" class="eroare-text"></span>
+
+
+        <label>Email:</label>
+        <input type="email" th:field="*{email}"
+               th:classappend="${#fields.hasErrors('email')} ? 'input-eroare' : ''"
+               placeholder="student@upb.ro"/>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="eroare-text"></span>
+
+
+        <label>Număr Matricol:</label>
+        <input type="text" th:field="*{numarMatricol}"
+               th:classappend="${#fields.hasErrors('numarMatricol')} ? 'input-eroare' : ''"/>
+        <span th:if="${#fields.hasErrors('numarMatricol')}" th:errors="*{numarMatricol}" class="eroare-text"></span>
+
+
+        <label>Facultatea:</label>
+        <select th:field="*{facultate.facultateID}"
+                th:classappend="${#fields.hasErrors('facultate')} ? 'input-eroare' : ''"
+                style="padding: 10px; border-radius: 4px; border: 1px solid #ccc; width: 100%;">
+            <option value="">-- Alege Facultatea --</option>
+            <option th:each="fac : ${listaFacultati}"
+                    th:value="${fac.facultateID}"
+                    th:text="${fac.denumire}">
+            </option>
+        </select>
+        <span th:if="${#fields.hasErrors('facultate')}" th:errors="*{facultate}" class="eroare-text"></span>
+
+
+        <button type="submit" class="btn-submit" style="margin-top: 20px;">Salvează Studentul</button>
+    </form>
+
+    <a th:href="@{/studenti}" class="buton-meniu">← Înapoi</a>
+</main>
+</body>
+</html>
